@@ -26,6 +26,7 @@ The configuration file should contain any of the following options (and ignores 
 * listen_port -- port for the dns proxy to listen on (most cases 53)
 * set_user    -- username to drop to after binding
 * set_group   -- group to drop to after binding
+* nowrite     -- disable write in /etc/resolv.conf
 * resolv_conf -- location of resolv.conf file to read from
 * log_file    -- location to log to (should be /dev/null unless debugging).
 
@@ -37,6 +38,7 @@ Any non-specified options will be set to their defaults:
 * listen_port = 53
 * set_user    = nobody
 * set_group   = nobody
+* nowrite     = true
 * resolv_conf = resolv.conf
 * log_file    = /dev/null
 
@@ -72,5 +74,6 @@ After running the daemon, the system should be configured to use the proxy autom
 ## Credits
 
 (c) jtRIPper 2012
+(c) KMihael  2016
 
 http://blackhatlibrary.net/

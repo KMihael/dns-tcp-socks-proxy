@@ -1,7 +1,8 @@
 /*
  *  UDP-TCP SOCKS DNS Tunnel
  *  (C) 2012 jtRIPper
- *
+ *  (C) 2016 KMihael
+ * 
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 1, or (at your option)
@@ -48,7 +49,7 @@ char *USERNAME = "nobody";
 char *GROUPNAME = "nobody";
 int NUM_DNS = 0;
 int LOG = 0;
-int REWRITE_RESOLVCONF = 1;
+int REWRITE_RESOLVCONF = 0;
 char **dns_servers;
 
 typedef struct {
@@ -111,6 +112,12 @@ void parse_config(char *file) {
         value[i] = tolower(value[i]);
       }
       REWRITE_RESOLVCONF = strcmp(value, "true") == 0;
+    }else if(strstr(line, "nowrite") != NULL) {
+      char *value = string_value(get_value(line));
+      for(int i = 0; value[i]; i++){
+        value[i] = tolower(value[i]);
+      }
+      REWRITE_RESOLVCONF = strcmp(value, "true") != 0;
     } else if(strstr(line, "resolv_conf") != NULL)
       RESOLVCONF = string_value(get_value(line));
     else if(strstr(line, "log_file") != NULL)
@@ -312,6 +319,7 @@ int main(int argc, char *argv[]) {
       printf("   * listen_port -- port for the dns proxy to listen on (most cases 53)\n");
       printf("   * set_user    -- username to drop to after binding\n");
       printf("   * set_group   -- group to drop to after binding\n");
+      printf("   * nowrite     -- disable write in /etc/resolv.conf\n");
       printf("   * resolv_conf -- location of resolv.conf to read from\n");
       printf("   * log_file    -- location to log server IPs to. (only necessary for debugging)\n\n");
       printf(" * Configuration directives should be of the format:\n");
@@ -323,6 +331,7 @@ int main(int argc, char *argv[]) {
       printf("   * listen_port  = 53\n");
       printf("   * set_user     = nobody\n");
       printf("   * set_group    = nobody\n");
+      printf("   * nowrite      = true\n");
       printf("   * resolv_conf  = resolv.conf\n");
       printf("   * log_file     = /dev/null\n");
       exit(0);
